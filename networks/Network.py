@@ -1,10 +1,11 @@
 import numpy as np
 
 from networks.base.layer.Layer import Layer
+from networks.base.layer.LayerError import EmptyLayerError
 
 
 class Network:
-    def __init__(self, loss=None, max_iterations=1e2, reg=1e-4, lr=1e-5, tol=1e-3, seed=0):
+    def __init__(self, loss=None, max_iterations=1e2, reg=1e-4, lr=1e-5, tol=1e-3, alpha=0.01, seed=0):
         self.layers = np.array([], dtype=Layer)
 
         self.loss_func = loss
@@ -12,6 +13,7 @@ class Network:
         self.reg = reg
         self.lr = lr
         self.tol = tol
+        self.alpha = alpha
         self._neurons_amount = 0
         self.n_layers = 0
 
@@ -19,12 +21,16 @@ class Network:
         np.random.seed(seed)
 
     def input_layer(self):
+        if self.isEmpty():
+            EmptyLayerError.raise_error()
         return self.layers[0]
 
     def output_layer(self):
+        if self.isEmpty():
+            EmptyLayerError.raise_error()
         return self.layers[-1]
 
-    def add(self, layer: Layer):
+    def add(self, layer):
         if not self.isEmpty():
             self.__connect_layers__(self.output_layer(), layer)
 
@@ -34,20 +40,20 @@ class Network:
 
     def fit(self, X: np.ndarray, y: np.ndarray):
         from tqdm import trange
-        n, z = X.shape
-        _, m = y.shape
+        n, m = y.shape
         if m != self.output_layer().n_neurons:
             raise IndexError("""
     Shape converting error:
     <Output layer> have {} neurons
     <Y>            have {} targets
     """.format(self.output_layer().n_neurons, m))
-
-        for _ in trange(self.max_iterations):
+        iterations = trange(self.max_iterations, colour='green')
+        loss = 0
+        for _ in iterations:
+            iterations.set_postfix_str("{} loss: {}".format(self.loss_func, loss))
             ind = np.random.randint(n)
             self.forward(X[ind])
-            loss = self.backward(y[ind])
-        # return loss
+            loss = (1 - self.alpha) + self.alpha * self.backward(y[ind])
 
     def forward(self, x):
         self.input_layer().__set_inputs__(x)

@@ -1,6 +1,6 @@
 import numpy as np
 
-from networks.base.function.Function import Id
+from networks.base.function.Function import Id, Function
 from networks.base.layer.LayerError import EmptyLayerError
 
 
@@ -12,7 +12,9 @@ class Layer:
     --- Attributes ---
 
     n_neurons: int
-       amount of neurons in the layer.
+        default = 1
+
+        amount of neurons in the layer.
 
     activation: Function (*networks.base.function.Function*)
         Implemented functions: **ReLU, Sigmoid, Id**.
@@ -24,7 +26,7 @@ class Layer:
 
     """
 
-    def __init__(self, n_neurons: int, activation=Id(), dropout=0):
+    def __init__(self, n_neurons: int = 1, activation: Function = Id(), dropout: float = 0):
         """
 
         :param n_neurons:  amount of neurons.
