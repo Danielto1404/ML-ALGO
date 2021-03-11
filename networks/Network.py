@@ -1,9 +1,6 @@
 import numpy as np
 
-from networks.base.function.Function import ReLU
-from networks.base.function.Loss import MSE
 from networks.base.layer.Layer import Layer
-from networks.test.test_generator import get_Y, get_X
 
 
 class Network:
@@ -100,20 +97,3 @@ class Network:
 
     def __str__(self):
         return "Network with {} non-biased neurons".format(self._neurons_amount)
-
-
-if __name__ == '__main__':
-    net = Network(max_iterations=3e5, loss=MSE(), lr=1e-4, seed=239)
-
-    relu = ReLU(alpha=0)
-
-    input_layer = Layer(n_neurons=3)
-    mid = Layer(n_neurons=10, activation=relu)
-    output_layer = Layer(n_neurons=1, activation=relu)
-
-    net.add(input_layer)
-    net.add(mid)
-    net.add(output_layer)
-
-    net.fit(get_X(), get_Y())
-    print(net.predict([[150, 150, 150]]))
