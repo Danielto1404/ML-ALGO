@@ -2,11 +2,11 @@
  Implementation of most popular ML algorithms
  
 - ### [Neural netwroks](networks)
-      Implementation of deep [*Multilayer perceptron*](https://en.wikipedia.org/wiki/Multilayer_perceptron).
-      Used naive [*Stochastic Gradient Descent*](https://en.wikipedia.org/wiki/Stochastic_gradient_descent) 
- to minimize [*Loss function*](https://en.wikipedia.org/wiki/Loss_function).
+  Implementation of deep [*Multilayer perceptron*](https://en.wikipedia.org/wiki/Multilayer_perceptron).
+  Used naive [*Stochastic Gradient Descent*](https://en.wikipedia.org/wiki/Stochastic_gradient_descent) 
+  to minimize [*Loss function*](https://en.wikipedia.org/wiki/Loss_function).
 
- Don't support **GPU and parallel** evaluations.
+  Don't support **GPU and parallel** evaluations.
 
 #### To do in future: 
   - [Momentum](https://en.wikipedia.org/wiki/Momentum_(technical_analysis))
