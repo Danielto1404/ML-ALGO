@@ -9,13 +9,13 @@ to minimize [***Loss function***](https://en.wikipedia.org/wiki/Loss_function).
 
 Don't support **GPU and parallel** evaluations.
 
-##### TODO in future: 
-[Momentum](https://en.wikipedia.org/wiki/Momentum_(technical_analysis))
-[Adam](https://arxiv.org/abs/1412.6980)
-NAG
-RMSProp
-Nadam
-AdaDelta
+#### To do in future: 
+  - [Momentum](https://en.wikipedia.org/wiki/Momentum_(technical_analysis))
+  - [Adam](https://arxiv.org/abs/1412.6980)
+  - NAG
+  - RMSProp
+  - Nadam
+  - AdaDelta
 
 Other optimizations overwied [here](https://towardsdatascience.com/deep-learning-optimizers-436171c9e23f)
 
