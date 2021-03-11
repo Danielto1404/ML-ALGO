@@ -1,5 +1,7 @@
 import numpy as np
 
+from networks.base.function.Function import ReLU
+from networks.base.function.Loss import MSE
 from networks.base.layer.Layer import Layer
 from networks.base.layer.LayerError import EmptyLayerError
 
@@ -103,3 +105,29 @@ class Network:
 
     def __str__(self):
         return "Network with {} non-biased neurons".format(self._neurons_amount)
+
+
+if __name__ == '__main__':
+    def f(x1, x2, x3):
+        return x1 ** 2 + 10 * x2 + 5 * x3
+
+
+    net = Network(max_iterations=4e5, loss=MSE())
+    net.add(Layer(3))
+    net.add(Layer(30, ReLU()))
+    net.add(Layer(30, ReLU()))
+    # net.add(Layer(30, ReLU()))
+    net.add(Layer(1))
+
+    # %%
+
+    xs = np.random.rand(1000, 3) * 10
+    ys = np.array([f(*a) for a in xs]).reshape(1000, 1)
+
+    # net.fit(xs, ys)
+
+    # %%
+
+    x = [0, 0, -1]
+    print(f(*x))
+    # net.predict([x])
