@@ -4,24 +4,6 @@ from networks.base.function.Function import Id
 from networks.base.layer.LayerError import EmptyLayerError
 
 
-class NeuronWeights:
-    """
-    Represents matrix of neuron weights to the next layer.
-        (n_neurons x n_outputs)
-    """
-
-    def __init__(self, n_neurons, n_outputs):
-        self.weights = np.random.random((n_neurons, n_outputs))
-
-    def multiply(self, inputs):
-        """
-        :param inputs: vector of inputs (1 x n_neurons)
-
-        :return: vector of outputs (1 x n_outputs)
-        """
-        return inputs @ self.weights
-
-
 class Layer:
     """
     Represents single layer in neural network.
@@ -76,14 +58,6 @@ class Layer:
         """
         self.inputs = inputs
 
-    def isFirst(self):
-        """
-        Check whether current layer is first in neural network.
-
-        :return: bool
-        """
-        return self.back_layer is None
-
     def activate(self):
         """
         Applies **activation** function to layer inputs.
@@ -104,7 +78,7 @@ class Layer:
 
     def activate_and_forward(self):
         """
-        Calculates weighted outputs on **activated** neurons and forwards them to the **next layer** as an **input**
+        Calculates weighted outputs on **activated** neurons and forwards them to the **next layer** as an **input**.
         """
         if self.next_layer is None:
             raise EmptyLayerError("""
@@ -114,6 +88,18 @@ class Layer:
         self.activation_outputs = self.activation_func.activate(self.inputs)
         self.weighted_outputs = self.activation_outputs @ self.neuron_weights + self.biased_weights
         self.next_layer.__set_inputs__(self.weighted_outputs)
+
+    def isInput(self):
+        """
+        :return: boolean values that indicates whether current layer is an input layer in neural network
+        """
+        return self.back_layer is None
+
+    def isOutput(self):
+        """
+        :return: boolean values that indicates whether current layer is an output layer in neural network
+        """
+        return self.next_layer is None
 
     def __str__(self):
         return """

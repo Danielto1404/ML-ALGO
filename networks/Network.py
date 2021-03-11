@@ -78,7 +78,7 @@ class Network:
             layer = back_layer
             errors = back_error
 
-            if layer.isFirst:
+            if layer.isInput:
                 break
 
         return loss
