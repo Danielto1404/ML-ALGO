@@ -1,8 +1,8 @@
 import numpy as np
 
 from networks.base.function.Function import ReLU
-from networks.base.layer.Layer import Layer
 from networks.base.function.Loss import MSE
+from networks.base.layer.Layer import Layer
 from networks.test.test_generator import get_Y, get_X
 
 
@@ -70,9 +70,10 @@ class Network:
             errors_gradient = (errors * activation_gradient).reshape(1, -1)
             back_error = errors_gradient @ back_layer.neuron_weights.T
 
-            gradient_step = back_layer.activation_outputs.reshape(-1, 1) @ errors_gradient
-            back_layer.neuron_weights -= self.lr * gradient_step
-            # back_layer.biased_weights -= self.lr * error_gradient
+            weights_gradient = back_layer.activation_outputs.reshape(-1, 1) @ errors_gradient
+
+            back_layer.neuron_weights -= self.lr * weights_gradient
+            back_layer.biased_weights -= self.lr * errors_gradient
 
             layer = back_layer
             errors = back_error
@@ -89,10 +90,7 @@ class Network:
         return self.n_layers == 0
 
     def __init_weights__(self, n_inputs, n_outputs):
-        shape = (n_inputs, n_outputs)
-        weights = np.random.random(shape) / np.sqrt(n_inputs)
-        # weights[:, :] = 1
-        return weights
+        return np.random.uniform(low=-1, high=1, size=(n_inputs, n_outputs)) / np.sqrt(n_inputs)
 
     def __connect_layers__(self, back_layer: Layer, next_layer: Layer):
         back_layer.next_layer = next_layer
@@ -105,17 +103,17 @@ class Network:
 
 
 if __name__ == '__main__':
-    net = Network(max_iterations=3e5, loss=MSE(), lr=1e-5, reg=0)
+    net = Network(max_iterations=3e5, loss=MSE(), lr=1e-4, seed=239)
 
     relu = ReLU(alpha=0)
 
     input_layer = Layer(n_neurons=3)
-    mid = Layer(n_neurons=4, activation=relu)
-    output_layer = Layer(n_neurons=1)
+    mid = Layer(n_neurons=10, activation=relu)
+    output_layer = Layer(n_neurons=1, activation=relu)
 
     net.add(input_layer)
-    # net.add(mid)
+    net.add(mid)
     net.add(output_layer)
 
     net.fit(get_X(), get_Y())
-    print(net.predict([[100, 100, 100]]))
+    print(net.predict([[150, 150, 150]]))

@@ -5,7 +5,6 @@ class MSE:
     """
     MSE loss:
 
-           m
      0.5 * ∑  ( predicted(i) - actual(i) )^2
           i=0
     """
@@ -15,3 +14,8 @@ class MSE:
 
     def loss(self, predicted, actual):
         return 0.5 * np.sum(np.square(predicted - actual))
+
+
+# class Hinge:
+#     def gradient(self, predicted: np.array, actual: np.array):
+#         return

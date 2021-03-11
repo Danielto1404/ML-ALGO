@@ -18,10 +18,11 @@ class Id(Function):
     y(x) = x
     """
 
-    def __init__(self):
-        super().__init__()
-        self._activate = np.vectorize(lambda x: x)
-        self._gradient = np.vectorize(lambda _: 1)
+    def activate(self, values):
+        return values
+
+    def gradient(self, values):
+        return np.ones(len(values))
 
 
 class ReLU(Function):

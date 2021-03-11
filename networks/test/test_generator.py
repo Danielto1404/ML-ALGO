@@ -2,7 +2,7 @@ import numpy as np
 
 
 def cube(x1, x2, x3):
-    return 1
+    return x1 + x2 + x3
     # return 10 * x1 + x1 * x2 + x3 * 13
 
 

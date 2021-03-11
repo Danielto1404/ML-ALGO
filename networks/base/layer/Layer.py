@@ -16,7 +16,7 @@ class NeuronWeights:
     def multiply(self, inputs):
         """
         :param inputs: vector of inputs (1 x n_neurons)
-        
+
         :return: vector of outputs (1 x n_outputs)
         """
         return inputs @ self.weights

@@ -4,3 +4,15 @@ class GradientExecutor:
 
     def calculate_gradient(self, current_layer, back_layer):
         pass
+
+
+class Momentum(GradientExecutor):
+    pass
+
+
+class NAG(GradientExecutor):
+    pass
+
+
+class AdaGrad(GradientExecutor):
+    pass
