@@ -5,6 +5,8 @@
   Implementation of deep [*Multilayer perceptron*](https://en.wikipedia.org/wiki/Multilayer_perceptron).
   Used naive [*Stochastic Gradient Descent*](https://en.wikipedia.org/wiki/Stochastic_gradient_descent) 
   to minimize [*Loss function*](https://en.wikipedia.org/wiki/Loss_function).
+  
+  ![Screenshot](networks/test/screenshots/loss.png)
 
   Don't support **GPU and parallel** evaluations.
 
