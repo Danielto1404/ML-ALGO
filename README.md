@@ -6,7 +6,7 @@
   Used naive [*Stochastic Gradient Descent*](https://en.wikipedia.org/wiki/Stochastic_gradient_descent) 
   to minimize [*Loss function*](https://en.wikipedia.org/wiki/Loss_function).
   
-  Also you can check your progress via progress bar (implemented via [**tqdm**](https://github.com/tqdm/tqdm))
+  #### Also you can check your progress via progress bar (implemented via [*tqdm*](https://github.com/tqdm/tqdm))
   ![Screenshot](tests/screenshots/loss.png)
 
   Don't support **GPU and parallel** evaluations.
