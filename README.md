@@ -1,7 +1,7 @@
 # ML-ALGO
  Implementation of most popular ML algorithms
  
-### [Neural netwroks](networks)
+- ### [Neural netwroks](networks)
 
 Implementation of deep [*Multilayer perceptron*](https://en.wikipedia.org/wiki/Multilayer_perceptron).
 Used naive [*Stochastic Gradient Descent*](https://en.wikipedia.org/wiki/Stochastic_gradient_descent) 
