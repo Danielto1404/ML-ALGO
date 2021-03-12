@@ -34,4 +34,4 @@
         - [SVD](rec_sys/MF/StochasticGradientDescentSVD.py)
         - [ALS](rec_sys/MF/ALS.py)
         - [BPR](rec_sys/MF/BPR.py)
-        - [WARP](rec-sys/MF/WARP.py)
+        - [WARP](rec_sys/MF/WARP.py)
