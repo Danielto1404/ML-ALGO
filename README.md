@@ -27,7 +27,7 @@
     - [Activation functions](networks/base/function/Function.py)
 
 
-- ### [Recomendation systems](rec_sys)
+- ### [Recommendation systems](rec_sys)
     Implementation of **Matrix factorizations** algorithms.
 
     - [Matrix factorizations](rec_sys/MF)
