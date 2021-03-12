@@ -27,11 +27,11 @@
     - [Activation functions](networks/base/function/Function.py)
 
 
-- ### [Recomendations systems](rec-sys)
+- ### [Recomendation systems](rec_sys)
     Implementation of **Matrix factorizations** algorithms.
 
-    - [Matrix factorizations](rec-sys/MF)
-        - [SVD](rec-sys/MF/StochasticGradientDescentSVD.py)
-        - [ALS](rec-sys/MF/ALS.py)
-        - [BPR](rec-sys/MF/BPR.py)
+    - [Matrix factorizations](rec_sys/MF)
+        - [SVD](rec_sys/MF/StochasticGradientDescentSVD.py)
+        - [ALS](rec_sys/MF/ALS.py)
+        - [BPR](rec_sys/MF/BPR.py)
         - [WARP](rec-sys/MF/WARP.py)
