@@ -14,9 +14,9 @@ class Minkowski(Metric):
         return np.linalg.norm(x - y, ord=self.dimension)
 
 
-class L1(Minkowski):
+class Manhattan(Minkowski):
     def __init__(self):
-        super(L1, self).__init__(dimension=1)
+        super(Manhattan, self).__init__(dimension=1)
 
 
 class Euclidean(Minkowski):
