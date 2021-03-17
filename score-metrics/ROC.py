@@ -5,7 +5,7 @@ class ROC:
         Calculates **AUC** and lists of **TPRs** and **FPRs** for different biases.
 
         Work's only with classes *+1* and *-1*
-        
+
         For example:
             in **Logistic Regression** w0 is bias.
             in **SVM** w0 is bias.
