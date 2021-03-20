@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.datasets import make_moons
 
 from networks.base.function.Function import ReLU, Sigmoid
 from networks.base.function.Loss import MSE
@@ -16,7 +17,7 @@ from networks.base.optimizer.SGD import SGD
 class Network:
     def __init__(self,
                  loss=None,
-                 sgd_optimizer: Optimizer = SGD(alpha=1e-1),
+                 sgd_optimizer: Optimizer = Adam(gamma=0.95, alpha=1e-1, beta=0.9),
                  weights_initializer: str = 'xavier',
                  max_epochs=1e2,
                  reg=1e-4,
@@ -145,29 +146,31 @@ class Network:
 
 
 if __name__ == '__main__':
-    optimizer = Adam(gamma=.95, alpha=1, beta=0.95)
+    optimizer = Adam(gamma=0.99, alpha=1e-1, beta=0.99)
+    # optimizer = SGD(alpha=1e-1)
 
-    net = Network(max_epochs=1e3, sgd_optimizer=optimizer, loss=MSE())
+    net = Network(max_epochs=1e3, sgd_optimizer=optimizer, loss=MSE(), seed=239)
 
     net.add(Layer(1))
 
-    # net.add(Layer(8, ReLU(alpha=0.4)))
-    # net.add(Layer(4, Sigmoid()))
-    net.add(Layer(4, Sigmoid()))
-    # net.add(Layer(16, Sigmoid()))
+    net.add(Layer(32, ReLU(alpha=0.2)))
+    net.add(Layer(32, ReLU(alpha=0.2)))
+    net.add(Layer(64, Sigmoid()))
 
     net.add(Layer(1))
 
 
     def ff(szzz):
-        _X = (np.random.rand(szzz) - 0.5) * 5
-        return _X.reshape(szzz, 1), (np.sin(_X) * 3 + 4 + 0.01 * np.random.randn(szzz)).reshape(szzz, 1)
+        # return make_moons(size, shuffle=False, noise=0.1)
+        _X = (np.random.rand(szzz) - 0.5) * 20
+        return _X.reshape(szzz, 1), (np.sin(_X)).reshape(szzz, 1)
 
 
-    size = 1000
+    size = 2000
     X_train, Y_train = ff(size)
 
     import matplotlib.pyplot as plt
+
     #
     plt.plot(X_train, Y_train, '.')
     plt.show()

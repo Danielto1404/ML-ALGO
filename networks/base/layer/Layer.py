@@ -45,6 +45,7 @@ class Layer:
 
         self.neuron_weights = None
         self.biased_weights = None
+        self.result = None
 
         self.next_layer = None
         self.back_layer = None
@@ -65,8 +66,8 @@ class Layer:
 
         :return: np.array (1 x n_neurons)
         """
-        self.activation_outputs = self.activation_func.activate(self.inputs)
-        return self.activation_outputs
+        self.result = self.activation_func.activate(self.inputs)
+        return self.result
 
     def activation_gradient(self):
         """

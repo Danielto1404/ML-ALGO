@@ -14,8 +14,8 @@ class Adam(Optimizer):
 
     def step(self, layer: Layer, neuron_gradient, biased_gradient):
         # (
-        #   (Grad, Avg) <- neurones
-        #   (Grad, Avg) <- biases
+        #   (grad, avg_grad) <- neurones
+        #   (grad, avg_grad) <- biases
         # )
 
         neuron_squared = neuron_gradient * neuron_gradient
