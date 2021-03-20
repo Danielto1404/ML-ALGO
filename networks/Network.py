@@ -1,23 +1,17 @@
 import numpy as np
-from sklearn.datasets import make_moons
 
 from networks.base.function.Function import ReLU, Sigmoid
 from networks.base.function.Loss import MSE
 from networks.base.init.WeightsInitializerGetter import WeightsInitializerGetter
 from networks.base.layer.Layer import Layer
 from networks.base.layer.LayerError import EmptyLayerError
-from networks.base.optimizer.AdaDelta import AdaDelta
-from networks.base.optimizer.Adam import Adam
-from networks.base.optimizer.Momentum import Momentum
-from networks.base.optimizer.Optimizer import Optimizer
-from networks.base.optimizer.RMSProp import RMSProp
-from networks.base.optimizer.SGD import SGD
+from networks.base.optimizer.Optimizer import Optimizer, Adam, AdaDelta, SGD, Momentum, RMSProp, AdaGrad
 
 
 class Network:
     def __init__(self,
                  loss=None,
-                 sgd_optimizer: Optimizer = Adam(gamma=0.95, alpha=1e-1, beta=0.9),
+                 sgd_optimizer: Optimizer = Adam(gamma=0.999, alpha=1e-3, beta=0.9),
                  weights_initializer: str = 'xavier',
                  max_epochs=1e2,
                  reg=1e-4,
@@ -101,25 +95,18 @@ class Network:
     def backward(self, y):
         layer = self.output_layer()
         loss = self.loss_func.loss(layer.result, y)
-        errors = self.loss_func.gradient(layer.result, y)
 
-        while True:
-            back_layer = layer.back_layer
-            activation_gradient = layer.activation_gradient()
-            errors_gradient = (errors * activation_gradient).reshape(1, -1)
-            back_error = errors_gradient @ back_layer.neuron_weights.T
+        errors_gradient = (self.loss_func.gradient(layer.result, y)
+                           @ layer.activation_gradient()).reshape(1, -1)
 
-            weights_gradient = back_layer.activation_outputs.reshape(-1, 1) @ errors_gradient
+        for layer in reversed(self.layers[1:-1]):
+            self.optimizer.step(
+                layer=layer,
+                neuron_gradient=layer.activation_outputs.reshape(-1, 1) @ errors_gradient,
+                biased_gradient=errors_gradient
+            )
 
-            self.optimizer.step(layer=back_layer,
-                                neuron_gradient=weights_gradient,
-                                biased_gradient=errors_gradient)
-
-            layer = back_layer
-            errors = back_error
-
-            if layer.isInput:
-                break
+            errors_gradient = errors_gradient @ layer.neuron_weights.T * layer.activation_gradient()
 
         return loss
 
@@ -146,16 +133,21 @@ class Network:
 
 
 if __name__ == '__main__':
-    optimizer = Adam(gamma=0.99, alpha=1e-1, beta=0.99)
-    # optimizer = SGD(alpha=1e-1)
+    # optimizer = AdaDelta(gamma=0.3, alpha=1)
+    # optimizer = SGD(alpha=1e-3, l2_reg=1e-3)
+    # optimizer = Momentum(alpha=1e-3, gamma=0.99)
+    # optimizer = RMSProp(gamma=0.99, alpha=1e-3)
+    optimizer = Adam(gamma=0.999, alpha=1e-3, beta=0.9)
+    # optimizer = AdaGrad(alpha=1e-3)
 
-    net = Network(max_epochs=1e3, sgd_optimizer=optimizer, loss=MSE(), seed=239)
+    net = Network(max_epochs=3e2, sgd_optimizer=optimizer, loss=MSE(), seed=239)
 
     net.add(Layer(1))
 
-    net.add(Layer(32, ReLU(alpha=0.2)))
-    net.add(Layer(32, ReLU(alpha=0.2)))
-    net.add(Layer(64, Sigmoid()))
+    net.add(Layer(8, ReLU(alpha=0.1)))
+    # net.add(Layer(32, ReLU(alpha=0.2)))
+    # net.add(Layer(32, ReLU(alpha=0.1)))
+    net.add(Layer(16, Sigmoid()))
 
     net.add(Layer(1))
 
@@ -163,15 +155,14 @@ if __name__ == '__main__':
     def ff(szzz):
         # return make_moons(size, shuffle=False, noise=0.1)
         _X = (np.random.rand(szzz) - 0.5) * 20
-        return _X.reshape(szzz, 1), (np.sin(_X)).reshape(szzz, 1)
+        return _X.reshape(szzz, 1), (np.sin(_X) + 10).reshape(szzz, 1)
 
 
-    size = 2000
+    size = 3000
     X_train, Y_train = ff(size)
 
     import matplotlib.pyplot as plt
 
-    #
     plt.plot(X_train, Y_train, '.')
     plt.show()
 

@@ -111,6 +111,4 @@ class Layer:
     activation: {}
     dropout   : {}
     neurons   : {}
-    inputs    : {}
-    outputs   : {}
-    """.format(self.activation_func, self.dropout, self.n_neurons, self.inputs, self.weighted_outputs)
+    """.format(self.activation_func, self.dropout, self.n_neurons)
