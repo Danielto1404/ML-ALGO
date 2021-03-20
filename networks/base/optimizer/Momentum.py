@@ -1,21 +1,23 @@
+from networks.base.layer.Layer import Layer
 from networks.base.optimizer.Optimizer import Optimizer
 
 
 class Momentum(Optimizer):
-    def __init__(self, gamma, alpha):
+    def __init__(self, gamma=0, alpha=1e-2):
+        super(Momentum, self).__init__()
         self.gamma = gamma
         self.alpha = alpha
-        self.average = None
 
-    def step(self, gradient, layer_index=None):
-        if self.average is None:
-            self.average = gradient
+    def step(self, layer: Layer, neuron_gradient, biased_gradient):
+        neuron_weights_avg, biased_weights_avg = self[layer]
 
-        self.average = self.gamma * self.average + (1 - self.gamma) * gradient
-        return self.alpha * self.average
+        neuron_weights_avg = self.gamma * neuron_weights_avg + (1 - self.gamma) * neuron_gradient
+        biased_weights_avg = self.gamma * biased_weights_avg + (1 - self.gamma) * biased_gradient
 
-    def update(self, gradient, layer_index):
-        pass
+        self[layer] = (neuron_weights_avg, biased_weights_avg)
+
+        layer.neuron_weights -= self.alpha * neuron_weights_avg
+        layer.biased_weights -= self.alpha * biased_weights_avg
 
     def __str__(self):
         return "Momentum optimizer [ gamma:= {} | alpha:= {} ]".format(self.gamma, self.alpha)

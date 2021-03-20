@@ -43,8 +43,12 @@ class Sigmoid(Function):
         def sigmoid(x):
             return 1 / (1 + np.exp(-x))
 
+        def grad(x):
+            sig = sigmoid(x)
+            return sig * (1 - sig)
+
         self._activate = np.vectorize(sigmoid)
-        self._gradient = np.vectorize(lambda x: sigmoid(x) * (1 - sigmoid(x)))
+        self._gradient = np.vectorize(grad)
 
     def __str__(self):
         return "Sigmoid"

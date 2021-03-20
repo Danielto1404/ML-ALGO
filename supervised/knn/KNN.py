@@ -25,8 +25,8 @@ class KNN:
         :param y: labels
         :return:
         """
-        self.X = X.copy()
-        self.y = y.copy()
+        self.X = X.copy_with_weights()
+        self.y = y.copy_with_weights()
 
     def predict(self, X):
         """
