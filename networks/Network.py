@@ -6,6 +6,7 @@ from networks.base.init.WeightsInitializerGetter import WeightsInitializerGetter
 from networks.base.layer.Layer import Layer
 from networks.base.layer.LayerError import EmptyLayerError
 from networks.base.optimizer.AdaDelta import AdaDelta
+from networks.base.optimizer.Adam import Adam
 from networks.base.optimizer.Momentum import Momentum
 from networks.base.optimizer.Optimizer import Optimizer
 from networks.base.optimizer.RMSProp import RMSProp
@@ -15,7 +16,7 @@ from networks.base.optimizer.SGD import SGD
 class Network:
     def __init__(self,
                  loss=None,
-                 optimizer: Optimizer = SGD(alpha=1e-1),
+                 sgd_optimizer: Optimizer = SGD(alpha=1e-1),
                  weights_initializer: str = 'xavier',
                  max_epochs=1e2,
                  reg=1e-4,
@@ -25,7 +26,7 @@ class Network:
 
         self.layers = np.array([], dtype=Layer)
         self.weights_initializer = WeightsInitializerGetter.get(weights_initializer)
-        self.optimizer = optimizer
+        self.optimizer = sgd_optimizer
         self.loss_func = loss
         self.max_epochs = int(max_epochs)
         self.reg = reg
@@ -144,15 +145,15 @@ class Network:
 
 
 if __name__ == '__main__':
-    optimizer = AdaDelta(gamma=0.5, alpha=1)
+    optimizer = Adam(gamma=.95, alpha=1, beta=0.95)
 
-    net = Network(max_epochs=1e3, optimizer=optimizer, loss=MSE())
+    net = Network(max_epochs=1e3, sgd_optimizer=optimizer, loss=MSE())
 
     net.add(Layer(1))
 
     # net.add(Layer(8, ReLU(alpha=0.4)))
     # net.add(Layer(4, Sigmoid()))
-    net.add(Layer(16, ReLU(alpha=0.3)))
+    net.add(Layer(4, Sigmoid()))
     # net.add(Layer(16, Sigmoid()))
 
     net.add(Layer(1))
@@ -167,7 +168,7 @@ if __name__ == '__main__':
     X_train, Y_train = ff(size)
 
     import matplotlib.pyplot as plt
-
+    #
     plt.plot(X_train, Y_train, '.')
     plt.show()
 

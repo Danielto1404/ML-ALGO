@@ -48,7 +48,6 @@ class Layer:
 
         self.next_layer = None
         self.back_layer = None
-        self.result = None
 
     def __set_inputs__(self, inputs: np.array):
         """
@@ -66,8 +65,8 @@ class Layer:
 
         :return: np.array (1 x n_neurons)
         """
-        self.result = self.activation_func.activate(self.inputs)
-        return self.result
+        self.activation_outputs = self.activation_func.activate(self.inputs)
+        return self.activation_outputs
 
     def activation_gradient(self):
         """
