@@ -6,8 +6,8 @@ class ActivationFunction:
         self._activate = None
         self._gradient = None
 
-    def apply(self, values):
-        self._activate(values)
+    def activate(self, values):
+        return self._activate(values)
 
     def gradient(self, values):
         return self._gradient(values)
@@ -21,7 +21,7 @@ class Id(ActivationFunction):
     y(x) = x
     """
 
-    def apply(self, values):
+    def activate(self, values):
         return values
 
     def gradient(self, values):

@@ -1,6 +1,6 @@
 import numpy as np
 
-from networks.base.function.ActivationFunction import Id, ActivationFunction
+from networks.base.function.Activation import ActivationFunction, Id
 from networks.base.layer.LayerError import EmptyLayerError
 
 
