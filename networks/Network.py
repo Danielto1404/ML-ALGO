@@ -5,7 +5,7 @@ from networks.base.function.Loss import MSE
 from networks.base.init.WeightsInitializerGetter import WeightsInitializerGetter
 from networks.base.layer.Layer import Layer
 from networks.base.layer.LayerError import EmptyLayerError
-from networks.base.optimizer.Optimizer import Optimizer, Adam
+from networks.base.optimizer.Optimizer import Optimizer, Adam, SGD
 
 
 class Network:
@@ -133,36 +133,40 @@ class Network:
 
 
 if __name__ == '__main__':
-    optimizer = Adam(gamma=0.999, alpha=1e-3, beta=0.9)
+    optimizer = Adam(gamma=0.999, alpha=1e-3, beta=0.95)
+    # optimizer = SGD(alpha=1e-3)
 
-    net = Network(max_epochs=2e2, sgd_optimizer=optimizer, loss=MSE(), seed=239)
+    net = Network(max_epochs=1e2, sgd_optimizer=optimizer, loss=MSE(), seed=239)
 
     net.add(Layer(1))
 
     net.add(Layer(8, ReLU(alpha=0.1)))
     net.add(Layer(32, ReLU(alpha=0.1)))
-    net.add(Layer(32, Sigmoid()))
+    net.add(Layer(64, Sigmoid()))
 
     net.add(Layer(1))
 
 
     def ff(szzz):
         # return make_moons(size, shuffle=False, noise=0.1)
-        _X = (np.random.rand(szzz) - 0.5) * 20
-        return _X.reshape(szzz, 1), (np.sin(_X) ** 3).reshape(szzz, 1)
+        _X = (np.random.rand(szzz) - 0.5) * 100
+        sinc = np.vectorize(lambda x: np.sin(x) / x if x != 0 else 1)
+        return _X.reshape(szzz, 1), (sinc(_X)).reshape(szzz, 1)
 
 
-    size = 400
+    size = 10000
     X_train, Y_train = ff(size)
 
     import matplotlib.pyplot as plt
 
-    net.fit(X_train, Y_train)
-    predicted = net.predict(X_train).reshape(size, 1)
-
     plt.figure(figsize=(16, 9))
     plt.plot(X_train, Y_train, '.', color='green')
-    plt.plot(X_train, predicted, '.', color='red')
-    # plt.legend(loc='best')
+
+    xs = np.linspace(-50, 50, 1000).reshape(1000, 1)
+    net.fit(X_train, Y_train)
+    predicted = net.predict(xs).reshape(1000, 1)
+
+    plt.plot(xs, predicted, '.', color='red')
     plt.show()
-    print(net.loss_func.loss(predicted, Y_train))
+
+    # print(net.loss_func.loss(predicted, Y_train))
