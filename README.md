@@ -24,7 +24,7 @@
   **Main classes**:
     - [Network class](networks/Network.py)
     - [Loss functions](networks/base/function/Loss.py)
-    - [Activation functions](networks/base/function/Function.py)
+    - [Activation functions](networks/base/function/ActivationFunction.py)
 
 
 - ### [Recommendation systems](rec_sys)

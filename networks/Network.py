@@ -1,11 +1,11 @@
 import numpy as np
 
-from networks.base.function.Function import ReLU, Sigmoid
+from networks.base.function.Activation import ReLU, Sigmoid
 from networks.base.function.Loss import MSE
 from networks.base.init.WeightsInitializerGetter import WeightsInitializerGetter
 from networks.base.layer.Layer import Layer
 from networks.base.layer.LayerError import EmptyLayerError
-from networks.base.optimizer.Optimizer import Optimizer, Adam, AdaDelta, SGD, Momentum, RMSProp, AdaGrad
+from networks.base.optimizer.Optimizer import Optimizer, Adam
 
 
 class Network:
@@ -133,21 +133,15 @@ class Network:
 
 
 if __name__ == '__main__':
-    # optimizer = AdaDelta(gamma=0.3, alpha=1)
-    # optimizer = SGD(alpha=1e-3, l2_reg=1e-3)
-    # optimizer = Momentum(alpha=1e-3, gamma=0.99)
-    # optimizer = RMSProp(gamma=0.99, alpha=1e-3)
     optimizer = Adam(gamma=0.999, alpha=1e-3, beta=0.9)
-    # optimizer = AdaGrad(alpha=1e-3)
 
-    net = Network(max_epochs=3e2, sgd_optimizer=optimizer, loss=MSE(), seed=239)
+    net = Network(max_epochs=2e2, sgd_optimizer=optimizer, loss=MSE(), seed=239)
 
     net.add(Layer(1))
 
     net.add(Layer(8, ReLU(alpha=0.1)))
-    # net.add(Layer(32, ReLU(alpha=0.2)))
-    # net.add(Layer(32, ReLU(alpha=0.1)))
-    net.add(Layer(16, Sigmoid()))
+    net.add(Layer(32, ReLU(alpha=0.1)))
+    net.add(Layer(32, Sigmoid()))
 
     net.add(Layer(1))
 
@@ -155,20 +149,20 @@ if __name__ == '__main__':
     def ff(szzz):
         # return make_moons(size, shuffle=False, noise=0.1)
         _X = (np.random.rand(szzz) - 0.5) * 20
-        return _X.reshape(szzz, 1), (np.sin(_X) + 10).reshape(szzz, 1)
+        return _X.reshape(szzz, 1), (np.sin(_X) ** 3).reshape(szzz, 1)
 
 
-    size = 3000
+    size = 400
     X_train, Y_train = ff(size)
 
     import matplotlib.pyplot as plt
 
-    plt.plot(X_train, Y_train, '.')
-    plt.show()
-
     net.fit(X_train, Y_train)
     predicted = net.predict(X_train).reshape(size, 1)
 
-    plt.plot(X_train, predicted, '.')
+    plt.figure(figsize=(16, 9))
+    plt.plot(X_train, Y_train, '.', color='green')
+    plt.plot(X_train, predicted, '.', color='red')
+    # plt.legend(loc='best')
     plt.show()
     print(net.loss_func.loss(predicted, Y_train))
