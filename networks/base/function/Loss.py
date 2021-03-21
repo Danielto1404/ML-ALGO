@@ -2,10 +2,10 @@ import numpy as np
 
 
 class LossFunction:
-    def loss(self, predicted, actual):
+    def loss(self, predicted, actual, n=1):
         raise NotImplementedError
 
-    def gradient(self, predicted, actual):
+    def gradient(self, predicted, actual, n=1):
         raise NotImplementedError
 
     def __repr__(self):
@@ -20,10 +20,10 @@ class MSE(LossFunction):
           i=0
     """
 
-    def loss(self, predicted, actual):
-        return 0.5 * np.sum(np.square(predicted - actual))
+    def loss(self, predicted, actual, n=1):
+        return 0.5 / n * np.sum(np.square(predicted - actual))
 
-    def gradient(self, predicted: np.array, actual: np.array):
+    def gradient(self, predicted: np.array, actual: np.array, n=1):
         return predicted - actual
 
     def __str__(self):
@@ -32,10 +32,10 @@ class MSE(LossFunction):
 
 class CrossEntropy(LossFunction):
 
-    def loss(self, predicted, actual):
+    def loss(self, predicted, actual, n=1):
         pass
 
-    def gradient(self, predicted, actual):
+    def gradient(self, predicted, actual, n=1):
         pass
 
     def __str__(self):

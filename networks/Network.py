@@ -81,7 +81,7 @@ class Network:
         for i in np.arange(n):
             xi, yi = X[i], y[i]
             _ = self.forward(xi)
-            loss += self.backward(yi)
+            loss += self.backward(yi, n)
 
         return loss
 
@@ -92,11 +92,11 @@ class Network:
 
         return self.output_layer().activate()
 
-    def backward(self, y):
+    def backward(self, y, n):
         layer = self.output_layer()
-        loss = self.loss_func.loss(layer.result, y)
+        loss = self.loss_func.loss(layer.result, y, n)
 
-        errors_gradient = (self.loss_func.gradient(layer.result, y)
+        errors_gradient = (self.loss_func.gradient(layer.result, y, n)
                            @ layer.activation_gradient()).reshape(1, -1)
 
         for layer in reversed(self.layers[1:-1]):
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         return _X.reshape(szzz, 1), (sinc(_X)).reshape(szzz, 1)
 
 
-    size = 10000
+    size = 100
     X_train, Y_train = ff(size)
 
     import matplotlib.pyplot as plt
