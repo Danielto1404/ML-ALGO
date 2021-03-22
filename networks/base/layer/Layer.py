@@ -26,17 +26,17 @@ class Layer:
 
     """
 
-    def __init__(self, n_neurons: int = 1, activation: ActivationFunction = Id(), dropout: float = 0):
+    def __init__(self, n_neurons: int = 1, activation_func: ActivationFunction = Id(), dropout: float = 0):
         """
 
         :param n_neurons:  amount of neurons.
-        :param activation: activation function
+        :param activation_func: activation function
             (Use one from 'networks.base.function.Activation' module)
         :param dropout:    probability to turn off random neuron of current layer in training mode
         """
         self.n_neurons = n_neurons
         self.n_biased = n_neurons + 1
-        self.activation_func = activation
+        self.activation_func = activation_func
         self.dropout = dropout
 
         self.weighted_outputs = None

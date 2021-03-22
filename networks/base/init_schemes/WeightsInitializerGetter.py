@@ -1,4 +1,4 @@
-from networks.base.init.Xavier import Xavier
+from networks.base.init_schemes.Xavier import Xavier
 
 
 class WeightsInitializerGetter:

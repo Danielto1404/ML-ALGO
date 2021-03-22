@@ -1,20 +1,23 @@
 import numpy as np
 
-from networks.base.function.Activation import ReLU, Sigmoid
 from networks.base.function.Loss import MSE
-from networks.base.init.WeightsInitializerGetter import WeightsInitializerGetter
+from networks.base.init_schemes.WeightsInitializerGetter import WeightsInitializerGetter
 from networks.base.layer.Layer import Layer
 from networks.base.layer.LayerError import EmptyLayerError
-from networks.base.optimizer.Optimizer import Optimizer, Adam, SGD
+from networks.base.optimizer.Optimizer import Optimizer, Adam
 
 
 class Network:
+    """
+    Represents fully connected neural networks.
+    (**Multi-layer-Perceptron**)
+    """
+
     def __init__(self,
-                 loss=None,
+                 loss=MSE(),
                  sgd_optimizer: Optimizer = Adam(gamma=0.999, alpha=1e-3, beta=0.9),
                  weights_initializer: str = 'xavier',
                  max_epochs=1e2,
-                 reg=1e-4,
                  tol=1e-3,
                  verbose=True,
                  seed=0):
@@ -24,7 +27,6 @@ class Network:
         self.optimizer = sgd_optimizer
         self.loss_func = loss
         self.max_epochs = int(max_epochs)
-        self.reg = reg
         self.tol = tol
         self._neurons_amount = 0
         self.n_layers = 0
@@ -34,16 +36,25 @@ class Network:
         np.random.seed(seed)
 
     def input_layer(self):
+        """
+        :return: first layer in neural network
+        """
         if self.isEmpty():
             EmptyLayerError.raise_error()
         return self.layers[0]
 
     def output_layer(self):
+        """
+        :return: last layer in neural network
+        """
         if self.isEmpty():
             EmptyLayerError.raise_error()
         return self.layers[-1]
 
     def add(self, layer):
+        """
+        Adds fully connected layer to neural network.
+        """
         if not self.isEmpty():
             self.__connect_layers__(self.output_layer(), layer)
 
@@ -52,6 +63,10 @@ class Network:
         self.n_layers += 1
 
     def fit(self, X: np.ndarray, y: np.ndarray):
+        """
+        :param X: features dataset
+        :param y: targets dataset
+        """
         from tqdm import trange
 
         n, m = y.shape
@@ -85,14 +100,27 @@ class Network:
 
         return loss
 
-    def forward(self, x):
+    def forward(self, x) -> np.ndarray:
+        """
+        Make a forward pass through neural network with given batch of elements.
+
+        :param x: batch of xs to calculate
+        :return:  vector of output for each element in batch
+        """
         self.input_layer().__set_inputs__(x)
         for layer in self.layers[:-1]:
             layer.activate_and_forward()
 
         return self.output_layer().activate()
 
-    def backward(self, y, n):
+    def backward(self, y, n) -> np.float64:
+        """
+        Distributes gradient via backpropagation algorithm and return loss.
+
+        :param y: actual value
+        :param n: number of train elements
+        :return:  loss function value on yi with pre-forwarded xi
+        """
         layer = self.output_layer()
         loss = self.loss_func.loss(layer.result, y, n)
 
@@ -111,9 +139,17 @@ class Network:
         return loss
 
     def predict(self, X):
-        return np.array([self.forward(x) for x in X])
+        """
+
+        :param X: Batch of features
+        :return:  Predicated output for each element in batch
+        """
+        return [self.forward(x) for x in X]
 
     def isEmpty(self):
+        """
+        :return: True if neural network have 0 layers, False otherwise
+        """
         return self.n_layers == 0
 
     def __connect_layers__(self, back_layer: Layer, next_layer: Layer):
@@ -131,42 +167,5 @@ class Network:
     def __str__(self):
         return "Network with {} non-biased neurons".format(self._neurons_amount)
 
-
-if __name__ == '__main__':
-    optimizer = Adam(gamma=0.999, alpha=1e-3, beta=0.95)
-    # optimizer = SGD(alpha=1e-3)
-
-    net = Network(max_epochs=1e2, sgd_optimizer=optimizer, loss=MSE(), seed=239)
-
-    net.add(Layer(1))
-
-    net.add(Layer(8, ReLU(alpha=0.1)))
-    net.add(Layer(32, ReLU(alpha=0.1)))
-    net.add(Layer(64, Sigmoid()))
-
-    net.add(Layer(1))
-
-
-    def ff(szzz):
-        # return make_moons(size, shuffle=False, noise=0.1)
-        _X = (np.random.rand(szzz) - 0.5) * 100
-        sinc = np.vectorize(lambda x: np.sin(x) / x if x != 0 else 1)
-        return _X.reshape(szzz, 1), (sinc(_X)).reshape(szzz, 1)
-
-
-    size = 100
-    X_train, Y_train = ff(size)
-
-    import matplotlib.pyplot as plt
-
-    plt.figure(figsize=(16, 9))
-    plt.plot(X_train, Y_train, '.', color='green')
-
-    xs = np.linspace(-50, 50, 1000).reshape(1000, 1)
-    net.fit(X_train, Y_train)
-    predicted = net.predict(xs).reshape(1000, 1)
-
-    plt.plot(xs, predicted, '.', color='red')
-    plt.show()
-
-    # print(net.loss_func.loss(predicted, Y_train))
+    def __repr__(self):
+        return str(self)

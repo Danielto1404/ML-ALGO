@@ -32,8 +32,11 @@ class Id(ActivationFunction):
 
 
 class ReLU(ActivationFunction):
+    """
+    **{ y(x) = x, x > 0  |  y(x) = alpha * x, x <= 0 }**
+    """
     def __init__(self, alpha=0):
-        super().__init__()
+        super(ReLU, self).__init__()
         self.alpha = alpha
         self._activate = np.vectorize(lambda x: alpha * x if x <= 0 else x)
         self._gradient = np.vectorize(lambda x: alpha if x <= 0 else 1)
@@ -44,7 +47,7 @@ class ReLU(ActivationFunction):
 
 class Sigmoid(ActivationFunction):
     def __init__(self):
-        super().__init__()
+        super(Sigmoid, self).__init__()
 
         def sigmoid(x):
             return 1 / (1 + np.exp(-x))
@@ -58,3 +61,18 @@ class Sigmoid(ActivationFunction):
 
     def __str__(self):
         return "Sigmoid"
+
+
+class SoftMax(ActivationFunction):
+    def __init__(self):
+        super(SoftMax, self).__init__()
+
+    def activate(self, values):
+        exps = np.exp(values)
+        return exps / np.sum(exps)
+
+    def gradient(self, values):
+        pass
+
+    def __str__(self):
+        return "SoftMax"

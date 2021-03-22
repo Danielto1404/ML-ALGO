@@ -1,4 +1,4 @@
-from networks.base.init.WeightsInitializer import WeightsInitializer
+from networks.base.init_schemes.WeightsInitializer import WeightsInitializer
 import numpy as np
 
 
