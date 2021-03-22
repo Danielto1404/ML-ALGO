@@ -10,14 +10,17 @@ class WeightsInitializerGetter:
     def get(name):
         initializer = WeightsInitializerGetter.initializers.get(name)
         if initializer is None:
-            raise UnknownWeightsInitializer(
-                """
-                Unknown  weights initializer: {}
-                Possible weights initializer: {}
-            """.format(name, list(WeightsInitializerGetter.initializers.keys())))
+            raise UnknownWeightsInitializer(unknown_name=name,
+                                            possible_names=list(WeightsInitializerGetter.initializers.keys()))
 
         return initializer
 
 
 class UnknownWeightsInitializer(Exception):
-    pass
+    def __init__(self, unknown_name, possible_names):
+        super(UnknownWeightsInitializer, self).__init__(
+            """
+                Unknown  weights initializer: {}
+                Possible weights initializer: {}
+            """.format(unknown_name, possible_names)
+        )

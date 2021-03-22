@@ -40,7 +40,7 @@ class Network:
         :return: first layer in neural network
         """
         if self.isEmpty():
-            EmptyLayerError.raise_error()
+            raise EmptyLayerError()
         return self.layers[0]
 
     def output_layer(self):
@@ -48,7 +48,7 @@ class Network:
         :return: last layer in neural network
         """
         if self.isEmpty():
-            EmptyLayerError.raise_error()
+            raise EmptyLayerError()
         return self.layers[-1]
 
     def add(self, layer):
