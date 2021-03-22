@@ -26,6 +26,6 @@ class ROC:
                 tpr += 1 / n_positive
                 TPR.append(tpr)
             else:
-                raise NotImplemented("Doesn't support auc function for classes not equal to +-1")
+                raise NotImplemented("Doesn't support auc functions for classes not equal to +-1")
 
         return TPR, FPR, auc

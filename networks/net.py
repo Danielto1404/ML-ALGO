@@ -1,16 +1,16 @@
 import numpy as np
 
-from networks.base.function.Loss import MSE
-from networks.base.init_schemes.WeightsInitializerGetter import WeightsInitializerGetter
-from networks.base.layer.Layer import Layer
-from networks.base.layer.LayerError import EmptyLayerError
-from networks.base.optimizer.Optimizer import Optimizer, Adam
+from networks.core.functions.losses import MSE
+from networks.core.init_schemes.weights import get_weight_initializer
+from networks.core.layers.layer import Layer
+from networks.core.layers.layer_error import EmptyLayerError
+from networks.core.optimizers.optimizer import Optimizer, Adam
 
 
 class Network:
     """
     Represents fully connected neural networks.
-    (**Multi-layer-Perceptron**)
+    (**Multi-layers-Perceptron**)
     """
 
     def __init__(self,
@@ -23,7 +23,7 @@ class Network:
                  seed=0):
 
         self.layers = np.array([], dtype=Layer)
-        self.weights_initializer = WeightsInitializerGetter.get(weights_initializer)
+        self.weights_initializer = get_weight_initializer(name=weights_initializer)
         self.optimizer = sgd_optimizer
         self.loss_func = loss
         self.max_epochs = int(max_epochs)
@@ -37,7 +37,7 @@ class Network:
 
     def input_layer(self):
         """
-        :return: first layer in neural network
+        :return: first layers in neural network
         """
         if self.isEmpty():
             raise EmptyLayerError()
@@ -45,7 +45,7 @@ class Network:
 
     def output_layer(self):
         """
-        :return: last layer in neural network
+        :return: last layers in neural network
         """
         if self.isEmpty():
             raise EmptyLayerError()
@@ -53,7 +53,7 @@ class Network:
 
     def add(self, layer):
         """
-        Adds fully connected layer to neural network.
+        Adds fully connected layers to neural network.
         """
         if not self.isEmpty():
             self.__connect_layers__(self.output_layer(), layer)
@@ -73,7 +73,7 @@ class Network:
         if m != self.output_layer().n_neurons:
             raise IndexError("""
     Shape converting error:
-    <Output layer> have {} neurons
+    <Output layers> have {} neurons
     <Y>            have {} targets
     """.format(self.output_layer().n_neurons, m))
 
@@ -119,7 +119,7 @@ class Network:
 
         :param y: actual value
         :param n: number of train elements
-        :return:  loss function value on yi with pre-forwarded xi
+        :return:  loss functions value on yi with pre-forwarded xi
         """
         layer = self.output_layer()
         loss = self.loss_func.loss(layer.result, y, n)

@@ -1,6 +1,6 @@
 import numpy as np
 
-from rec_sys.MF.BPR import BPR
+from recsys.mf.bpr import BPR
 
 
 class WARP(BPR):

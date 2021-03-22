@@ -1,12 +1,12 @@
 import numpy as np
 
-from networks.base.function.Activation import ActivationFunction, Id
-from networks.base.layer.LayerError import EmptyLayerError
+from networks.core.functions.activations import ActivationFunction, Id
+from networks.core.layers.layer_error import EmptyLayerError
 
 
 class Layer:
     """
-    Represents single layer in neural network.
+    Represents single layers in neural network.
     Core block of build neural network.
 
     --- Attributes ---
@@ -14,15 +14,15 @@ class Layer:
     n_neurons: int
         default = 1
 
-        amount of neurons in the layer.
+        amount of neurons in the layers.
 
-    activation: Function (*networks.base.function.Function*)
+    activation: Function (*networks.core.functions.Function*)
         Implemented functions: **ReLU, Sigmoid, Id**.
 
     dropout: float [0; 1]
         default = 0
 
-        **probability** to turn off **random** neuron of current layer in training mode.
+        **probability** to turn off **random** neuron of current layers in training mode.
 
     """
 
@@ -30,9 +30,9 @@ class Layer:
         """
 
         :param n_neurons:  amount of neurons.
-        :param activation_func: activation function
-            (Use one from 'networks.base.function.Activation' module)
-        :param dropout:    probability to turn off random neuron of current layer in training mode
+        :param activation_func: activation functions
+            (Use one from 'networks.core.functions.Activation' module)
+        :param dropout:    probability to turn off random neuron of current layers in training mode
         """
         self.n_neurons = n_neurons
         self.n_biased = n_neurons + 1
@@ -53,16 +53,16 @@ class Layer:
     def __set_inputs__(self, inputs: np.array):
         """
         Sets inputs from given array values.
-        Used to forward outputs to the next layer
+        Used to forward outputs to the next layers
 
         :param inputs:
-            np.array (1 x n), where n is amount of neurons on current layer.
+            np.array (1 x n), where n is amount of neurons on current layers.
         """
         self.inputs = inputs
 
     def activate(self):
         """
-        Applies **activation** function to layer inputs.
+        Applies **activation** functions to layers inputs.
 
         :return: np.array (1 x n_neurons)
         """
@@ -71,7 +71,7 @@ class Layer:
 
     def activation_gradient(self):
         """
-        Returns gradient of **activation** function
+        Returns gradient of **activation** functions
         calculated on **forwarding** block values
 
         :return: np.array (1 x n_neurons)
@@ -80,12 +80,12 @@ class Layer:
 
     def activate_and_forward(self):
         """
-        Calculates weighted outputs on **activated** neurons and forwards them to the **next layer** as an **input**.
+        Calculates weighted outputs on **activated** neurons and forwards them to the **next layers** as an **input**.
         """
         if self.next_layer is None:
             raise EmptyLayerError("""
-            Impossible to forward outputs, next layer is empty.
-            Use 'activate' to get the result of current layer.
+            Impossible to forward outputs, next layers is empty.
+            Use 'activate' to get the result of current layers.
             """)
         self.activation_outputs = self.activation_func.activate(self.inputs)
         self.weighted_outputs = self.activation_outputs @ self.neuron_weights + self.biased_weights
@@ -96,13 +96,13 @@ class Layer:
 
     def isInput(self):
         """
-        :return: boolean values that indicates whether current layer is an input layer in neural network
+        :return: boolean values that indicates whether current layers is an input layers in neural network
         """
         return self.back_layer is None
 
     def isOutput(self):
         """
-        :return: boolean values that indicates whether current layer is an output layer in neural network
+        :return: boolean values that indicates whether current layers is an output layers in neural network
         """
         return self.next_layer is None
 

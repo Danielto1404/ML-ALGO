@@ -2,6 +2,15 @@ import numpy as np
 
 
 class ActivationFunction:
+    """
+    **Superclass** of all activation functions.
+
+    If you need **custom activation** function you can subclass from this class and implement methods:
+        - **def activate(self, values)**
+        - **def gradient(self, values)**
+
+    """
+
     def __init__(self):
         self._activate = None
         self._gradient = None
@@ -35,6 +44,7 @@ class ReLU(ActivationFunction):
     """
     **{ y(x) = x, x > 0  |  y(x) = alpha * x, x <= 0 }**
     """
+
     def __init__(self, alpha=0):
         super(ReLU, self).__init__()
         self.alpha = alpha

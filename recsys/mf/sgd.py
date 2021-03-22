@@ -1,7 +1,7 @@
 import scipy.sparse as sp
 from tqdm import trange
 
-from rec_sys.MF.CoreMF import CoreMF
+from recsys.mf.core import CoreMF
 
 
 class StochasticGradientDescentSVD(CoreMF):

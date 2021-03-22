@@ -2,12 +2,12 @@ import numpy as np
 import scipy.sparse as sp
 from tqdm import tqdm
 
-from rec_sys.MF.CoreMF import CoreMF
+from recsys.mf.core import CoreMF
 
 
 class BPR(CoreMF):
     def __init__(self, iterations, factors, learning_rate, alpha, seed):
-        super().__init__(iterations, factors, learning_rate, alpha, seed=seed, beta=None, calculate_loss=None)
+        super().__init__(iterations, factors, learning_rate, alpha, seed=seed, beta=0, calculate_loss=False)
         self.positives = {}
         self.negatives = {}
 

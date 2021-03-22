@@ -49,7 +49,7 @@ class CoreMF:
         self.seed = seed
         self.calculate_loss = calculate_loss
 
-        # Will be computed in fit function
+        # Will be computed in fit functions
         self.user_to_item = None
         self.user_factors = None
         self.item_factors = None

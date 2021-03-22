@@ -2,7 +2,7 @@ import scipy.sparse as sp
 import numpy as np
 from tqdm import tqdm
 
-from rec_sys.MF.CoreMF import CoreMF
+from recsys.mf.core import CoreMF
 
 
 class ALS(CoreMF):
@@ -16,9 +16,9 @@ class ALS(CoreMF):
         """
         super().__init__(iterations=iterations,
                          factors=factors,
-                         learning_rate=None,
+                         learning_rate=0,
                          alpha=alpha,
-                         beta=None,
+                         beta=0,
                          seed=seed,
                          calculate_loss=calculate_loss)
         self.confidence = confidence

@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from networks.base.layer.Layer import Layer
+from networks.core.layers.layer import Layer
 
 
 class Optimizer:
@@ -21,7 +21,7 @@ class Optimizer:
         if isinstance(layer, Layer):
             return self.__is_inited__[layer]
 
-        raise KeyError('Item must be instance of subclass [ networks.base.layer.Layer ]')
+        raise KeyError('Item must be instance of subclass [ networks.core.layers.Layer ]')
 
     def __mark_as_inited__(self, layer):
         self.__is_inited__[layer] = True
@@ -33,13 +33,13 @@ class Optimizer:
 
             self.__layer_weights__[key] = value
         else:
-            raise KeyError('Item must be instance of subclass [ networks.base.layer.Layer ]')
+            raise KeyError('Item must be instance of subclass [ networks.core.layers.Layer ]')
 
     def __getitem__(self, item):
         if isinstance(item, Layer):
             return self.__layer_weights__.get(item)
 
-        raise KeyError('Item must be instance of subclass [ networks.base.layer.Layer ]')
+        raise KeyError('Item must be instance of subclass [ networks.core.layers.Layer ]')
 
     def step(self, layer: Layer, neuron_gradient, biased_gradient):
         raise NotImplementedError
@@ -72,7 +72,7 @@ class SGD(Optimizer):
         layer.biased_weights -= self.alpha * biased_gradient
 
     def __str__(self):
-        return "SGD optimizer [ alpha:= {} ]".format(self.alpha)
+        return "SGD optimizers [ alpha:= {} ]".format(self.alpha)
 
     def __repr__(self):
         return str(self)
@@ -96,7 +96,7 @@ class Momentum(Optimizer):
         layer.biased_weights -= self.alpha * biased_weights_avg
 
     def __str__(self):
-        return "Momentum optimizer [ gamma:= {} | alpha:= {} ]".format(self.gamma, self.alpha)
+        return "Momentum optimizers [ gamma:= {} | alpha:= {} ]".format(self.gamma, self.alpha)
 
     def __repr__(self):
         return str(self)
