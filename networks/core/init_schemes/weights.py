@@ -14,7 +14,7 @@ class Xavier(WeightsInitializer):
     def init_for_neurons(self, n_input, n_outputs):
         """
         Returns matrix of (n_inputs x n_outputs) random initialized weights
-        from ( -1 / sqrt(n_input); 1 / sqrt(n_input) )
+        from ( 6 / sqrt(n_input + n_output); 6 / sqrt(n_input + n_output) )
 
         :param n_input:   number of neurons which multiplies by weights
         :param n_outputs:

@@ -1,5 +1,8 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
+from networks.core.data.splitter import MiniBatch
+from networks.core.functions.activations import ReLU, Sigmoid
 from networks.core.functions.losses import MSE
 from networks.core.init_schemes.weights import get_weight_initializer
 from networks.core.layers.layer import Layer
@@ -62,7 +65,7 @@ class Network:
         self._neurons_amount += layer.n_neurons
         self.n_layers += 1
 
-    def fit(self, X: np.ndarray, y: np.ndarray):
+    def fit(self, X: np.ndarray, y: np.ndarray, batch_size=1, shuffle=True):
         """
         :param X: features dataset
         :param y: targets dataset
@@ -84,19 +87,23 @@ class Network:
 
         Q = 0
         gamma = 0
+        data_loader = MiniBatch(X=X, y=y, n=n, batch_size=batch_size, shuffle=shuffle)
+
         for _ in epochs:
-            loss = self.__fit_epoch__(X, y, n)
+            loss = self.__fit_epoch__(data_loader)
+            data_loader.__reset_index__()
+
             Q = gamma * Q + (1 - gamma) * loss
 
             if self.verbose:
                 epochs.set_postfix_str("{} loss: {}".format(self.loss_func, Q))
 
-    def __fit_epoch__(self, X, y, n):
+    def __fit_epoch__(self, batches: MiniBatch):
         loss = 0
-        for i in np.arange(n):
-            xi, yi = X[i], y[i]
-            _ = self.forward(xi)
-            loss += self.backward(yi, n)
+        n = batches.n
+        for (_x, _y) in batches:
+            self.forward(_x)
+            loss += self.backward(_y, n)
 
         return loss
 
@@ -144,7 +151,7 @@ class Network:
         :param X: Batch of features
         :return:  Predicated output for each element in batch
         """
-        return [self.forward(x) for x in X]
+        return np.array([self.forward(x) for x in X])
 
     def isEmpty(self):
         """
@@ -169,3 +176,31 @@ class Network:
 
     def __repr__(self):
         return str(self)
+
+
+if __name__ == '__main__':
+    def data(size):
+        X_t = (np.random.rand(size) - 0.5) * 25
+        sigmoid = np.vectorize(lambda x: 1 / (1 + np.e ** -x))
+        Y_y = sigmoid(X_t) + X_t ** 2 * np.sin(X_t)
+        return X_t.reshape(size, 1), Y_y.reshape(size, 1)
+
+
+    size = 1000
+    X_train, Y_train = data(size)
+
+    optimizer = Adam(gamma=.999, alpha=1e-3, beta=0.97)
+
+    net = Network(max_epochs=1e2, sgd_optimizer=optimizer)
+    net.add(Layer(1))
+    net.add(Layer(64, ReLU(alpha=0.3)))
+    net.add(Layer(64, ReLU(alpha=0.1)))
+    net.add(Layer(64, Sigmoid()))
+    net.add(Layer(1))
+
+    net.fit(X_train, Y_train, batch_size=1)
+
+    predicted = net.predict(X_train).reshape(size, 1)
+
+    # plt.plot(X_train, predicted, '.', color='red')
+    plt.show()

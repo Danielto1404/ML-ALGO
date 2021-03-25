@@ -91,9 +91,6 @@ class Layer:
         self.weighted_outputs = self.activation_outputs @ self.neuron_weights + self.biased_weights
         self.next_layer.__set_inputs__(self.weighted_outputs)
 
-    def backward(self, errors):
-        pass
-
     def isInput(self):
         """
         :return: boolean values that indicates whether current layers is an input layers in neural network
