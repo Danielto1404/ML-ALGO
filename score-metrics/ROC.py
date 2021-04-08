@@ -29,3 +29,35 @@ class ROC:
                 raise NotImplemented("Doesn't support auc functions for classes not equal to +-1")
 
         return TPR, FPR, auc
+
+    @staticmethod
+    def max_accuracy_threshold(probabilities, targets):
+        eps = 1e-10
+        sorted_probabilities, sorted_targets, thresholds = [], [], []
+
+        for p, t in sorted(zip(probabilities, targets)):
+            sorted_probabilities.append(p)
+            sorted_targets.append(t)
+
+        p_ = -eps
+        max_prob = sorted_probabilities[-1]
+        for p in sorted_probabilities + [max_prob + eps]:
+            thresh = (p_ + p) / 2
+            thresholds.append(thresh)
+            p_ = p
+
+        def accuracy(targets_, predicted_):
+            accuracy_score = 0
+            for et, ep in zip(targets_, predicted_):
+                accuracy_score += int(et == ep)
+
+        accuracies = [accuracy(targets_=targets,
+                               predicted_=[1 if p > thresh else 0 for p in probabilities]) for thresh in thresholds]
+
+        max_index, max_accuracy = -1, -1
+        for i, a in accuracies:
+            if a >= max_accuracy:
+                max_accuracy = a
+                max_index = i
+
+        return thresholds[max_index]
