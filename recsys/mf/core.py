@@ -93,15 +93,15 @@ class CoreMF:
             self.user_bias = np.array(user_to_item.mean(axis=1)).reshape(-1)
             self.item_bias = np.array(user_to_item.mean(axis=0)).reshape(-1)
 
-    def predict(self, i, j):
+    def predict(self, user_index, item_index):
         """
         Predicts relevance score of **item (j)** for **user (j)**
 
-        :param i: user index
-        :param j: item index
+        :param user_index: user index in sparse matrix
+        :param item_index: item index in sparse matrix
         :return:  score of user-item dot product embeddings
         """
-        return self.user_factors[i] @ self.item_factors[j]
+        return self.user_factors[user_index] @ self.item_factors[item_index]
 
     def similar_items(self, item_id, top_k=10) -> (np.array, np.array):
         """
@@ -113,16 +113,16 @@ class CoreMF:
         """
         scores = np.linalg.norm(self.item_factors - self.item_factors[item_id], axis=1)
         indices = np.argsort(scores)
-        return indices[:top_k], np.sort(scores)[:top_k]
+        return indices[:top_k], scores[indices][:top_k]
 
-    def recommend(self, user_index, amount=10) -> np.array:
+    def recommend(self, user_index, top_k=10) -> np.array:
         """
         :return user recommendations by **best** score, which user **hadn't been rated**.
         """
         user_predictions = self.user_factors[user_index] @ self.item_factors.T
         known_item_ids = self.item_indices[self.user_indices == user_index]
         user_predictions[known_item_ids] = np.NINF
-        return np.argsort(user_predictions.reshape(-1))[-amount:]
+        return np.argsort(user_predictions.reshape(-1))[-top_k:]
 
     def rmse(self, user_to_item: sp.csr_matrix, tqdm_range=None, n_elements=250, use_all=False):
         if use_all:

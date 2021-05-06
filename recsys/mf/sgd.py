@@ -5,8 +5,8 @@ from recsys.mf.core import CoreMF
 
 
 class StochasticGradientDescentSVD(CoreMF):
-    def predict(self, i, j):
-        return super().predict(i, j) + self.user_bias[i] + self.item_bias[j] + self.bias
+    def predict(self, user_index, item_index):
+        return super().predict(user_index, item_index) + self.user_bias[user_index] + self.item_bias[item_index] + self.bias
 
     def fit(self, user_to_item: sp.csr_matrix):
         self.__fit_preparation__(user_to_item, init_biases=True)
