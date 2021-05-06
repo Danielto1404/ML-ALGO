@@ -55,6 +55,10 @@ class ReLU(ActivationFunction):
         return "ReLU  [ alpha={} ]".format(self.alpha)
 
 
+class LeakyReLU(ReLU):
+    pass
+
+
 class Sigmoid(ActivationFunction):
     def __init__(self):
         super(Sigmoid, self).__init__()
