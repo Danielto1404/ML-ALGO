@@ -11,8 +11,8 @@ class BPR(CoreMF):
         self.positives = {}
         self.negatives = {}
 
-    def negative_choice(self, u):
-        return np.random.choice(self.negatives[u])
+    def negative_choice(self, user):
+        return np.random.choice(self.negatives[user])
 
     def fit(self, user_to_item: sp.csr_matrix):
         self.__fit_preparation__(user_to_item)
@@ -23,27 +23,27 @@ class BPR(CoreMF):
         items_range = np.arange(n_items)
         users_range = np.unique(self.user_indices)
 
-        for u in np.arange(n_users):
-            values = implicit_values[u]
-            self.positives[u] = items_range[values > 0]
-            self.negatives[u] = items_range[values == 0]
+        for user in np.arange(n_users):
+            values = implicit_values[user]
+            self.positives[user] = items_range[values > 0]
+            self.negatives[user] = items_range[values == 0]
 
         def anti_gradient_step(m, gradient, latent):
             exp = np.exp(-m)
             return self.learning_rate * ((exp / (1 + exp)) * gradient - self.alpha * latent)
 
         for it in np.arange(self.iterations):
-            for u in tqdm(users_range, desc='Epoch {}'.format(it + 1), colour='green'):
-                for positive in self.positives[u]:
-                    negative = self.negative_choice(u)
+            for user in tqdm(users_range, desc='Epoch {}'.format(it + 1), colour='green'):
+                for positive in self.positives[user]:
+                    negative = self.negative_choice(user)
 
                     positive_item = self.item_factors[positive]
                     negative_item = self.item_factors[negative]
-                    user_factors = self.user_factors[u]
+                    user_factors = self.user_factors[user]
                     delta = positive_item - negative_item
 
                     margin = user_factors @ delta.T
 
-                    self.user_factors[u] += anti_gradient_step(margin, delta, user_factors)
+                    self.user_factors[user] += anti_gradient_step(margin, delta, user_factors)
                     self.item_factors[positive] += anti_gradient_step(margin, user_factors, positive_item)
                     self.item_factors[negative] += anti_gradient_step(margin, -user_factors, negative_item)
