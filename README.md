@@ -12,7 +12,7 @@ Implementation of most popular ML algorithms
   Don't support **GPU and parallel** evaluations.
 
   #### List of available **SGD** optimizers:
-    - [Naive SGD]
+    - Naive SGD
     - [Momentum](https://en.wikipedia.org/wiki/Momentum_(technical_analysis))
     - [Adam](https://arxiv.org/abs/1412.6980)
     - RMSProp
